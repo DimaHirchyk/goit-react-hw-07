@@ -1,12 +1,12 @@
 import { Field, Form, Formik, ErrorMessage } from "formik";
 import css from "./ContactForm.module.css";
-import { nanoid } from "nanoid";
+// import { nanoid } from "nanoid";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
-import { addContact } from "../../redux/contactsSlice";
+import { addContact } from "../../redux/contactsOps";
 
 const FeedbackSchema = Yup.object().shape({
-  username: Yup.string()
+  name: Yup.string()
     .min(2, "Too Short!")
     .max(25, "Too Long!")
     .required("Required"),
@@ -19,7 +19,7 @@ const FeedbackSchema = Yup.object().shape({
 });
 
 const initialValues = {
-  username: "",
+  name: "",
   number: "",
 };
 
@@ -27,12 +27,7 @@ export default function ContactForm() {
   const dispatch = useDispatch();
 
   const handlSubmit = (values, form) => {
-    const userAction = addContact({
-      id: nanoid(),
-      name: values.username,
-      number: values.number,
-    });
-    dispatch(userAction);
+    dispatch(addContact(values));
     form.resetForm();
   };
 
@@ -43,20 +38,11 @@ export default function ContactForm() {
         onSubmit={handlSubmit}
         validationSchema={FeedbackSchema}>
         <Form className={css.form}>
-          <label htmlFor="username" className={css.label}>
+          <label htmlFor="name" className={css.label}>
             Name
           </label>
-          <Field
-            type="text"
-            name="username"
-            id="username"
-            className={css.input}
-          />
-          <ErrorMessage
-            name="username"
-            component="span"
-            className={css.error}
-          />
+          <Field type="text" name="name" id="name" className={css.input} />
+          <ErrorMessage name="name" component="span" className={css.error} />
 
           <label htmlFor="number" className={css.label}>
             Number
